@@ -99,5 +99,5 @@ before starting non-trivial work. Project delta:
 
 - **Gate:** `gofmt -l .` clean, then `CGO_ENABLED=0 go vet ./...` and
   `CGO_ENABLED=0 go test -race ./...` green.
-- **Lenses:** standard three.
+- **Lenses:** standard set — see `pipeline:working-agreement`, which includes lens O.
 - **Branching:** standard (`type/<issue>-<slug>`, PR into `main`).
