@@ -79,12 +79,10 @@ Library surfaces return plain `error` (no `PublicError` user/internal split). Wr
 
 ## Conventions
 
-Generic Go conventions (style, file declaration order, test structure, test-only
-code placement, godoc, error discipline, code organization) come from the
-`stack-go` plugin skills — they are not restated here. Project-specific constraints:
+Generic Go conventions (style, declaration order, test structure, godoc, error discipline,
+build hygiene, organisation) come from the `stack-go` plugin skills and are not restated
+anywhere in this repo. Project-specific constraints:
 
-- **Public surface lives in the root package; `internal/` holds the dialect-specific
-  machinery.** There is no external consumer to justify a `pkg/`.
 - **Forbidden imports**: never introduce `github.com/mattn/go-sqlite3` (or any other
   CGO-dependent driver) — it would force `CGO_ENABLED=1` and break the pure-Go build.
   The SQLite path must stay on `github.com/glebarez/sqlite`.
@@ -96,22 +94,10 @@ code placement, godoc, error discipline, code organization) come from the
 
 ## Working agreement
 
-All non-trivial work follows the plan-first pipeline:
+Plan-first pipeline; the canonical procedure is the `pipeline:working-agreement` skill — load it
+before starting non-trivial work. Project delta:
 
-1. **Plan** — the `architect` agent writes `plans/NNN-slug.md` (create via the
-   `pipeline:new-plan` skill). No source edits before a plan exists.
-2. **Implement** — the `engineer` agent executes the plan's tasks with tests.
-3. **Review** — three `reviewer` agents launched in parallel in ONE message, each
-   prompt naming its lens (A: correctness & tests, B: security & operations,
-   C: performance & architecture) and the changed files. Full three-lens fan-out is
-   mandatory on the first review; the post-fix re-review is ONE solo reviewer scoped
-   to the changed lines.
-4. **Gate** — `gofmt -l .` clean, `go vet` and `go test -race ./...` green (with
-   `CGO_ENABLED=0`) before review; a red tree goes to the `testdoctor` agent first.
-5. **Complete** — the orchestrator merges the three reports, deduplicates, resolves
-   conflicting verdicts (naming what was rejected and why; the user has final say).
-   P0/P1 findings loop back to the engineer. Only when every P0/P1 is fixed or
-   explicitly accepted: move the plan via the `pipeline:complete-plan` skill.
-
-Plans live in `plans/` (active), `plans/completed/` (shipped, `YYMMDD.NNNN.slug.md`),
-`plans/history/` (abandoned/superseded). One plan per concern.
+- **Gate:** `gofmt -l .` clean, then `CGO_ENABLED=0 go vet ./...` and
+  `CGO_ENABLED=0 go test -race ./...` green.
+- **Lenses:** standard three.
+- **Branching:** standard (`type/<issue>-<slug>`, PR into `main`).
