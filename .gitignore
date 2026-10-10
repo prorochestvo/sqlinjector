@@ -51,4 +51,5 @@ store.toml
 !/deployments/docker/.env
 # Claude Code: commit only project settings
 .claude/*
+!.claude/skills
 !.claude/settings.json
