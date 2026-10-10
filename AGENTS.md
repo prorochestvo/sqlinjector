@@ -100,5 +100,5 @@ Plan-first pipeline; the canonical procedure is the `pipeline:working-agreement`
 before starting non-trivial work. Project delta:
 
 - **Gate:** `gofmt -l .` clean, then `go vet ./...` and `CGO_ENABLED=0 go test -race ./...`
-- **Lenses:** standard staged set — see `pipeline:working-agreement`.
+- **Review focus:** standard staged set — see `pipeline:working-agreement`.
 - **Branching:** `type/<issue>-<slug>`, PR into `main`.
